@@ -13,10 +13,12 @@ def process_ner():  # Đổi tên hàm ở đây
     data = request.get_json()
     text = data['text']
     print(text)
-    text_mark = ner_extractor.extract(text) 
+    text_mark = ner_extractor.extract(text)["marked_text"]
+    entities = ner_extractor.extract(text)["entities"]
     print(text_mark)
     return jsonify({
-        'text': text_mark
+        'text': text_mark,
+        'entities': entities
     })
 
 if __name__ == '__main__':

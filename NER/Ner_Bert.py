@@ -91,7 +91,11 @@ class NE_Extraction:
         print(json_output)
         # Remove the special CLS and SEP tokens introduced by BERT
         marked_text = marked_text.replace('[CLS]', '').replace('[SEP]', '')
-        return marked_text.strip()
+        # return marked_text.strip()
+        return {
+            "marked_text": marked_text.strip(),
+            "entities": entities
+        }
 
     # ... (phần còn lại của mã không thay đổi)
 
@@ -99,7 +103,7 @@ class NE_Extraction:
 if __name__ == '__main__':
     text = "The earlier interventions investigating metacognitive strategies to improve math computation skills of students with LD were largely effective ,providing further evidence for successful training to improve performance in students with LD , but were relatively short in duration and taught only isolated skills . In the research presently reviewed , effective metacognitive training was implemented in the areas of self - monitoring of on - task behavior , error self - monitoring , making positive affective self - statements , self - instructional checking procedures , self - instruction of calculation procedures , and math anxiety ."
     ner = NE_Extraction()
-    marked_entities = ner.extract(text)
+    marked_entities = ner.extract(text)["entities"]
     print(marked_entities)
 
 
