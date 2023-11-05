@@ -1,0 +1,29 @@
+body {
+  width: 300px;
+  padding: 10px;
+}
+
+h1 {
+  font-size: 18px;
+  text-align: center;
+}
+
+#highlightBtn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+#highlightBtn:hover {
+  background-color: #45a049;
+}
+
+#highlightText {
+  color: red;
+  text-decoration: underline red;
+}
