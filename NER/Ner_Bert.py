@@ -75,7 +75,7 @@ class NE_Extraction:
                     # If the current token is part of the previous entity, extend the entity
                     else:
                         entities[-1]["text"] += f" {token}"
-                    marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid red; background-color: #ffcccc; margin-right: 5px;'>{token}</span>"
+                    marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid red; background-color: #ffcccc; margin-right: 5px; border-radius: 10px;'>{token}</span>"
                 if entities[-1]["start"] is None:
                     entities[-1]["start"] = text_sentence.find(entities[-1]["text"])
                 entities[-1]["end"] = text_sentence.find(entities[-1]["text"]) + len(entities[-1]["text"])
