@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "NER/**"
+      - ".github/**"
     branches: ["main"]
 
 permissions:
