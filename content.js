@@ -5,6 +5,20 @@ async function highlightSelectedText() {
   let selectedText = selection.toString();
   if (!selectedText.trim().length) return false;
 
+  // Get the range and the common ancestor element
+  const selectionRange = selection.getRangeAt(0);
+  const containerElement = selectionRange.commonAncestorContainer;
+
+  // Check if the container is of type Node.TEXT_NODE, and get the parent if so
+  const containingElement =
+    containerElement.nodeType === Node.TEXT_NODE
+      ? containerElement.parentNode
+      : containerElement;
+
+  // Now you have the containing element, you can get its HTML
+  const containingElementHtml = containingElement.outerHTML;
+  console.log("Containing element HTML:", containingElementHtml);
+
   console.log("Selected text:", selectedText);
   const response = await fetch("http://116.103.227.228:8000/api/ner", {
     method: "POST",
@@ -41,6 +55,8 @@ async function highlightSelectedText() {
       `<span style="${style}">${entity.text}</span>`
     );
   });
+
+  console.log("Marked text:", markedText);
 
   const range = selection.getRangeAt(0);
   range.deleteContents();
