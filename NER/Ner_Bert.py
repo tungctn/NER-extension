@@ -41,16 +41,14 @@ class NE_Extraction:
 
     def style_text(self, text, type):
         marked_text = ""
-        # for entity in entities:
-            # marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid red; background-color: #ffcccc; margin-right: 5px; border-radius: 10px;'>{entity['text']}</span>"
         if type == "PER":
-            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid red; background-color: #ffcccc; margin-right: 5px; border-radius: 10px;>{text}</span>"
+            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid red; background-color: #ffcccc; margin-right: 5px; border-radius: 10px;'>{text}</span>"
         elif type == "ORG":
-            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #00FFFF; background-color: #F0FFFF; margin-right: 5px; border-radius: 10px;>{text}</span>"
+            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #00FFFF; background-color: #F0FFFF; margin-right: 5px; border-radius: 10px;'>{text}</span>"
         elif type == "LOC":
-            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #FFD700; background-color: #FFFDD0; margin-right: 5px; border-radius: 10px;>{text}</span>"
+            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #FFD700; background-color: #FFFDD0; margin-right: 5px; border-radius: 10px;'>{text}</span>"
         else:
-            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #0FFF50; background-color: #ECFFDC; margin-right: 5px; border-radius: 10px;>{text}</span>"
+            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #0FFF50; background-color: #ECFFDC; margin-right: 5px; border-radius: 10px;'>{text}</span>"
         return marked_text    
 
     def extract(self, text_sentence):
