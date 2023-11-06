@@ -1,9 +1,11 @@
 async function highlightSelectedText() {
   const selection = window.getSelection();
-  if (!selection.rangeCount) return;
+  if (!selection.rangeCount) return false;
 
-  const selectedText = selection.toString();
-  console.log(selectedText);
+  let selectedText = selection.toString();
+  if (!selectedText.trim().length) return false;
+
+  console.log("Selected text:", selectedText);
   const response = await fetch("http://116.103.227.228:8000/api/ner", {
     method: "POST",
     headers: {
@@ -11,18 +13,59 @@ async function highlightSelectedText() {
     },
     body: JSON.stringify({ text: selectedText }),
   });
+
   const data = await response.json();
   console.log("API response:", data);
 
-  const range = selection.getRangeAt(0);
-  const span = document.createElement("span");
-  span.innerHTML = data.text;
-  console.log(data.text);
+  let markedText = selectedText;
 
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  let uniqueEntities = {};
+  data.entities.forEach((entity) => {
+    if (!uniqueEntities.hasOwnProperty(entity.text)) {
+      uniqueEntities[entity.text] = entity;
+    }
+  });
+  console.log("Unique entities:", uniqueEntities);
+  entities = Object.values(uniqueEntities);
+  console.log("Filtered entities:", entities);
+
+  entities.forEach((entity) => {
+    const style = getStyleByType(entity.type);
+    const regex = new RegExp(escapeRegExp(entity.text), "g");
+    markedText = markedText.replace(
+      regex,
+      `<span style="${style}">${entity.text}</span>`
+    );
+  });
+
+  const range = selection.getRangeAt(0);
   range.deleteContents();
-  range.insertNode(span);
+
+  const fragment = document.createRange().createContextualFragment(markedText);
+  range.insertNode(fragment);
+
+  selection.removeAllRanges();
+
+  return true;
+}
+
+function getStyleByType(type) {
+  switch (type) {
+    case "PER":
+      return "display: inline-block; padding: 5px; border: 2px solid red; background-color: #ffcccc; margin-right: 5px; border-radius: 10px;";
+    case "ORG":
+      return "display: inline-block; padding: 5px; border: 2px solid #00FFFF; background-color: #F0FFFF; margin-right: 5px; border-radius: 10px;";
+    case "LOC":
+      return "display: inline-block; padding: 5px; border: 2px solid #FFD700; background-color: #FFFDD0; margin-right: 5px; border-radius: 10px;";
+    default:
+      return "display: inline-block; padding: 5px; border: 2px solid #0FFF50; background-color: #ECFFDC; margin-right: 5px; border-radius: 10px;";
+  }
 }
 
 document.body.addEventListener("mouseup", function () {
-  highlightSelectedText();
+  highlightSelectedText().catch(console.error);
 });
