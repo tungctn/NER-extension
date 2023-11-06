@@ -39,7 +39,19 @@ class NE_Extraction:
         self.label2idx = self.model.config.id2label
         self.model.eval()  # Make sure to set the model to evaluation mode
 
-    # ... (phần còn lại của mã không thay đổi)
+    def style_text(self, text, type):
+        marked_text = ""
+        # for entity in entities:
+            # marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid red; background-color: #ffcccc; margin-right: 5px; border-radius: 10px;'>{entity['text']}</span>"
+        if type == "PER":
+            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid red; background-color: #ffcccc; margin-right: 5px; border-radius: 10px;>{text}</span>"
+        elif type == "ORG":
+            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #00FFFF; background-color: #F0FFFF; margin-right: 5px; border-radius: 10px;>{text}</span>"
+        elif type == "LOC":
+            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #FFD700; background-color: #FFFDD0; margin-right: 5px; border-radius: 10px;>{text}</span>"
+        else:
+            marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid #0FFF50; background-color: #ECFFDC; margin-right: 5px; border-radius: 10px;>{text}</span>"
+        return marked_text    
 
     def extract(self, text_sentence):
         tokenized_sentence = self.tokenizer.encode(text_sentence)
@@ -59,6 +71,7 @@ class NE_Extraction:
         for token, prediction, confidence in zip(tokens, predictions[0].tolist(), confidences[0]):
             label = self.labels[prediction]
             if label != 'O':  # Nếu nhãn không phải là 'O'
+                
                 if token.startswith("##"):
                     token = token[2:]  # Loại bỏ '##'
                     marked_text = marked_text.rstrip() + token  # Gắn vào token trước đó
@@ -75,7 +88,9 @@ class NE_Extraction:
                     # If the current token is part of the previous entity, extend the entity
                     else:
                         entities[-1]["text"] += f" {token}"
-                    marked_text += f" <span style='display: inline-block; padding: 5px; border: 1px solid red; background-color: #ffcccc; margin-right: 5px; border-radius: 10px;'>{token}</span>"
+                    print(entities[-1]["type"])
+                    print(token)
+                    marked_text +=  self.style_text(token, entities[-1]['type'])
                 if entities[-1]["start"] is None:
                     entities[-1]["start"] = text_sentence.find(entities[-1]["text"])
                 entities[-1]["end"] = text_sentence.find(entities[-1]["text"]) + len(entities[-1]["text"])
